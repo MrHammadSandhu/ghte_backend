@@ -5,10 +5,7 @@ const cors = require("cors");
 const app = express();
 
 // Configure CORS
-const allowedOrigins = [
-  "https://www.gulfhorizontele.com", // Production frontend
-  "http://127.0.0.1:5501", // Local frontend testing
-];
+const allowedOrigins = ["*"];
 const corsOptions = {
   origin: (origin, callback) => {
     if (!origin || allowedOrigins.includes(origin)) {
@@ -46,20 +43,80 @@ app.post("/api/send-email", async (req, res) => {
     return res.status(400).json({ message: "All fields are required" });
   }
 
-  // Email HTML content
+  // HTML Email Template
   const htmlContent = `
-    <html>
-      <body>
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Product Inquiry</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        color: #333;
+      }
+      .email-container {
+        max-width: 600px;
+        margin: auto;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+      .header {
+        background-color: #01ae47;
+        color: #fff;
+        text-align: center;
+        padding: 20px;
+      }
+      .content {
+        padding: 20px;
+      }
+      .content h2 {
+        color: #01ae47;
+        margin-top: 0;
+      }
+      .details {
+        padding: 10px;
+        background-color: #f9f9f9;
+        border-radius: 5px;
+      }
+      .details p {
+        margin: 5px 0;
+      }
+      .footer {
+        text-align: center;
+        padding: 10px;
+        background-color: #f4f4f4;
+        font-size: 12px;
+        color: #777;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="email-container">
+      <div class="header">
         <h1>New Product Inquiry</h1>
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Phone:</strong> ${phone}</p>
-        <p><strong>Subject:</strong> ${subject}</p>
-        <p><strong>Message:</strong> ${message}</p>
-      </body>
-    </html>
+      </div>
+      <div class="content">
+        <h2>Details:</h2>
+        <div class="details">
+          <p><strong>User Name:</strong> ${name}</p>
+          <p><strong>Email Address:</strong> ${email}</p>
+          <p><strong>Subject:</strong> ${subject}</p>
+          <p><strong>Phone Number:</strong> ${phone}</p>
+          <p><strong>Message:</strong> ${message}</p>
+        </div>
+      </div>
+      <div class="footer">
+        <p>&copy; 2024 Gulf Horizon Telecom. All rights reserved.</p>
+      </div>
+    </div>
+  </body>
+  </html>
   `;
-
   try {
     // Send email
     await transporter.sendMail({
