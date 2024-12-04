@@ -4,20 +4,27 @@ const nodemailer = require("nodemailer");
 const cors = require("cors");
 const app = express();
 
-// Configure CORS
-const allowedOrigins = ["*"];
+// Middleware for explicit CORS headers
 const corsOptions = {
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true); // Allow requests with valid origins
-    } else {
-      callback(new Error("Not allowed by CORS")); // Block other origins
-    }
-  },
+  origin: "*", // Allow all origins
   methods: ["GET", "POST", "OPTIONS"], // Allow specific methods
   allowedHeaders: ["Content-Type"], // Allow specific headers
 };
+
 app.use(cors(corsOptions));
+
+// Middleware to handle preflight requests explicitly
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  if (req.method === "OPTIONS") {
+    res.status(204).end(); // End preflight OPTIONS request
+  } else {
+    next();
+  }
+});
+
 app.use(express.json());
 
 // Nodemailer transporter setup
@@ -117,6 +124,7 @@ app.post("/api/send-email", async (req, res) => {
   </body>
   </html>
   `;
+
   try {
     // Send email
     await transporter.sendMail({
