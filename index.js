@@ -7,12 +7,16 @@ const app = express();
 
 // Configure CORS
 const corsOptions = {
-  origin: "https://www.gulfhorizontele.com/", // Frontend origin
-  methods: "GET,POST", // Allowed methods
-  allowedHeaders: "Content-Type", // Allowed headers
+  origin: ["https://www.gulfhorizontele.com"], // Allow requests from your frontend domain
+  methods: ["GET", "POST"],
+  allowedHeaders: ["Content-Type"],
 };
 
 app.use(cors(corsOptions));
+app.use(express.json());
+
+// Handle preflight requests
+app.options("*", cors(corsOptions));
 app.use(express.json());
 
 // Nodemailer transporter setup
