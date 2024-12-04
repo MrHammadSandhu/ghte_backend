@@ -1,9 +1,8 @@
 require("dotenv").config();
 const express = require("express");
 const nodemailer = require("nodemailer");
-
 const app = express();
-
+const cors = require("cors");
 // Middleware to handle CORS
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*"); // Allow all origins
@@ -18,9 +17,27 @@ app.use((req, res, next) => {
 
   next();
 });
-
 // Middleware to parse JSON
 app.use(express.json());
+
+// Configure CORS
+const corsOptions = {
+  origin: ["https://www.gulfhorizontele.com", "http://127.0.0.1:5501"], // Add local testing and production domains
+  methods: ["GET", "POST", "OPTIONS"], // Include OPTIONS for preflight requests
+  allowedHeaders: ["Content-Type"], // Specify allowed headers
+};
+app.use(cors(corsOptions)); // Enable CORS
+app.options("*", cors(corsOptions)); // Handle preflight requests globally
+app.use(express.json());
+
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*"); // Allow all origins or restrict to specific domains
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
 
 // Nodemailer transporter setup
 const transporter = nodemailer.createTransport({
