@@ -15,7 +15,7 @@ app.use((req, res, next) => {
 
 // Configure CORS
 const corsOptions = {
-  origin: ["https://www.gulfhorizontele.com", "http://127.0.0.1:5500"], // Add local testing and production domains
+  origin: ["*", "https://www.gulfhorizontele.com", "http://127.0.0.1:5500"], // Add local testing and production domains
   methods: ["GET", "POST", "OPTIONS"], // Include OPTIONS for preflight requests
 };
 app.use(cors(corsOptions)); // Enable CORS
