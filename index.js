@@ -5,8 +5,14 @@ require("dotenv").config();
 
 const app = express();
 
-// Middleware
-app.use(cors());
+// Configure CORS
+const corsOptions = {
+  origin: "https://www.gulfhorizontele.com/", // Frontend origin
+  methods: "GET,POST", // Allowed methods
+  allowedHeaders: "Content-Type", // Allowed headers
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Nodemailer transporter setup
