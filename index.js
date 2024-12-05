@@ -120,10 +120,11 @@ app.post("/api/send-email", async (req, res) => {
   // Sending Email
   try {
     await transporter.sendMail({
-      from: email,
-      to: process.env.EMAIL,
-      subject: "New Product Inquiry",
+      from: `"${name}" <yourEmail@example.com>`, // SMTP server se authorized email
+      to: "info@gulfhorizontele.com",
+      subject: subject,
       html: htmlContent,
+      replyTo: email, // User ka email address yahan set karein
     });
 
     res.status(200).json({ message: "Email sent successfully to admin!" });
