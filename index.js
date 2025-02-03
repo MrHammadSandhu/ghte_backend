@@ -15,7 +15,7 @@ app.use((req, res, next) => {
 
 // Configure CORS
 const corsOptions = {
-  origin: ["*", "https://www.gulfhorizontele.com", "http://127.0.0.1:5500"], // Add local testing and production domains
+  origin: ["*", "https://www.gulfhorizontele.com"], // Add local testing and production domains
   methods: ["GET", "POST", "OPTIONS"], // Include OPTIONS for preflight requests
 };
 app.use(cors(corsOptions)); // Enable CORS
@@ -121,7 +121,7 @@ app.post("/api/send-email", async (req, res) => {
   try {
     await transporter.sendMail({
       from: `"${name}" <yourEmail@example.com>`, // SMTP server se authorized email
-      to: "info@gulfhorizontele.com",
+      to: process.env.ADMIN_MAIL,
       subject: subject,
       html: htmlContent,
       replyTo: email, // User ka email address yahan set karein
